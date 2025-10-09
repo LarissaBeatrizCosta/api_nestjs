@@ -26,9 +26,42 @@ export default tseslint.config(
   },
   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn'
+      '@typescript-eslint/no-unused-vars': ['warn'],
+      '@typescript-eslint/no-inferrable-types': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
+
+      quotes: ['error', 'single'], 
+      camelcase: 'error', 
+      'import/order': [
+        'error',
+        {
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            ['parent', 'sibling', 'index'],
+          ],
+          'newlines-between': 'always',
+        },
+      ], 
+      curly: ['error', 'all'], 
+      'prefer-template': 'error', 
+      'no-useless-concat': 'error', 
+      'prefer-const': 'error', 
+      'no-extra-bind': 'error', 
+      'no-useless-return': 'warn', 
+      'no-duplicate-imports': 'error',
+      'no-trailing-spaces': 'warn',
+      'object-shorthand': 'warn', 
+      'no-var': 'error',
+      'prefer-arrow-callback': 'error',
+      'no-console': 'warn',
+
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/ban-types': 'warn',
+      eqeqeq: ['error', 'always'],
     },
   },
 );
