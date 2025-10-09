@@ -8,7 +8,21 @@ import { v4 as uuidv4 } from 'uuid';
 export class CompaniesService {
   private companies: Company[] = [];
 
+  private isValidCnpj(cnpj: string): boolean {
+    const cleanedCnpj = cnpj.replace(/[^\d]/g, '');
+    return cleanedCnpj.length === 14;
+  }
   create(createCompanyDto: CreateCompanyDto) {
+    if (!this.isValidCnpj(createCompanyDto.cnpj)) {
+      throw new BadRequestException('CNPJ must be a valid 14 digit number');
+    }
+    const existingCompany = this.companies.find(
+      (company) => company.cnpj === createCompanyDto.cnpj,
+    );
+
+    if (existingCompany) {
+      throw new BadRequestException('Company with this CNPJ already exists');
+    }
     try {
       const newCompany: Company = {
         id: uuidv4(),
@@ -45,6 +59,20 @@ export class CompaniesService {
   }
 
   update(id: string, updateCompanyDto: UpdateCompanyDto) {
+    if (updateCompanyDto.cnpj) {
+      if (!this.isValidCnpj(updateCompanyDto.cnpj)) {
+        throw new BadRequestException('CNPJ must be a valid 14 digit number');
+      }
+      const existingCnpj = this.companies.find(
+        (c) => c.cnpj === updateCompanyDto.cnpj && c.id !== id,
+      );
+
+      if (existingCnpj) {
+        throw new BadRequestException(
+          'Another company with this CNPJ already exists',
+        );
+      }
+    }
     try {
       const company = this.findOne(id);
 
@@ -63,7 +91,7 @@ export class CompaniesService {
 
   remove(id: string) {
     try {
-      this.findOne(id); 
+      this.findOne(id);
 
       this.companies = this.companies.filter((company) => company.id !== id);
     } catch (error) {
