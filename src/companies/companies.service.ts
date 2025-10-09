@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { Company } from './entities/company.entity';
@@ -6,31 +6,69 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class CompaniesService {
-  private readonly companies: Company[] = [];
-  private uuid = uuidv4();
+  private companies: Company[] = [];
 
   create(createCompanyDto: CreateCompanyDto) {
-    const newCompany: Company = {
-      id: this.uuid,
-      ...createCompanyDto,
-    };
-    this.companies.push(newCompany);
-    return newCompany;
+    try {
+      const newCompany: Company = {
+        id: uuidv4(),
+        ...createCompanyDto,
+      };
+      this.companies.push(newCompany);
+      return newCompany;
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException('Error creating company');
+    }
   }
 
   findAll() {
-    return `This action returns all companies`;
+    try {
+      return this.companies;
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException('Error finding companies');
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} company`;
+  findOne(id: string) {
+    try {
+      const company = this.companies.find((company) => company.id === id);
+      if (!company) {
+        throw new BadRequestException('Company not found');
+      }
+      return company;
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException('Error finding company');
+    }
   }
 
-  update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    return `This action updates a #${id} company`;
+  update(id: string, updateCompanyDto: UpdateCompanyDto) {
+    try {
+      const company = this.findOne(id);
+
+      const updatedCompany = { ...company, ...updateCompanyDto };
+
+      this.companies = this.companies.map((c) =>
+        c.id === id ? updatedCompany : c,
+      );
+
+      return updatedCompany;
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException('Error updating company');
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  remove(id: string) {
+    try {
+      this.findOne(id); 
+
+      this.companies = this.companies.filter((company) => company.id !== id);
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException('Error removing company');
+    }
   }
 }

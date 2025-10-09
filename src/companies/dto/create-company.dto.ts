@@ -1,5 +1,5 @@
 export class CreateCompanyDto {
-  nome: string;
+  name: string;
   cnpj: string;
-  ativo: boolean;
+  active: boolean;
 }

@@ -1,6 +1,6 @@
 export class Company {
   id: string;
-  nome: string;
+  name: string;
   cnpj: string;
-  ativo: boolean;
+  active: boolean;
 }
