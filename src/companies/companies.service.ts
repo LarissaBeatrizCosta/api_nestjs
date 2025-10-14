@@ -6,7 +6,20 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class CompaniesService {
-  private companies: Company[] = [];
+  private companies: Company[] = [
+    {
+      id: '1',
+      name: 'Tech Solutions LTDA',
+      cnpj: '12345678000199',
+      active: true,
+    },
+    {
+      id: '2',
+      name: 'Comércio de Alimentos Bom Sabor',
+      cnpj: '98765432000155',
+      active: true,
+    },
+  ];
 
   private isValidCnpj(cnpj: string): boolean {
     const cleanedCnpj = cnpj.replace(/[^\d]/g, '');
